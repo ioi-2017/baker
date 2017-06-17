@@ -16,9 +16,11 @@
 		// Initilize Makrded.js Renderer
 
 		var renderer = new marked.Renderer();
+		let getImagePath = (x) => x
 
 		// enable resize option for images
 		renderer.image = function (href, title, text) {
+			href = getImagePath(href);
 			var tags = '';
 			if (title) {
 				size = title.split('x');
@@ -60,10 +62,20 @@
 		}
 
 		const server = top.require('electron').remote.require('./server');
-		server.setFileTextListener((text) => {
-			setPreviewText(text);
+		const path = top.require('path');
+		function updatePreview(text) {
+			const filePath = server.getFilePath();
+			const basePath = path.dirname(filePath);
+			getImagePath = (imagePath) => 'file://' + path.join(basePath, imagePath);
+			console.log(getImagePath('x.png'));
+			setPreviewText(server.getFileText());
+		}
+
+		server.setFileTextListener(() => {
+			updatePreview();
 		});
-		setPreviewText(server.getFileText());
+
+		updatePreview();
 	</script>
 </body>
 

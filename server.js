@@ -35,7 +35,7 @@ function setFileText(text) {
   fileText = text;
   setTimeout(() => {
     if (fileCallback) {
-      fileCallback(fileText);
+      fileCallback();
     }
   }, 0);
   setTimeout(saveMarkdownFile, 0);
@@ -43,6 +43,10 @@ function setFileText(text) {
 
 function getFileText() {
   return fileText;
+}
+
+function getFilePath() {
+  return filePath;
 }
 
 function setFileTextListener(callback) {
@@ -55,4 +59,5 @@ module.exports = {
   setFileText,
   setFileTextListener,
   getFileText,
+  getFilePath,
 };
