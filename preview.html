@@ -54,25 +54,16 @@
 			smartypants: false
 		});
 
-		function readTextFile(file) {
-			var rawFile = new XMLHttpRequest();
-			rawFile.open("GET", file, true);
-			rawFile.onreadystatechange = function () {
-				if (rawFile.readyState === 4) {
-					if (rawFile.status === 200 || rawFile.status == 0) {
-						var allText = rawFile.responseText;
-						document.getElementById('content').innerHTML = marked(allText);
-						renderMathInElement(document.getElementById('content'));
-					}
-				}
-			}
-			rawFile.send(null);
+		function setPreviewText(text) {
+			document.getElementById('content').innerHTML = marked(text);
+			renderMathInElement(document.getElementById('content'));
 		}
 
-		readTextFile("index.md")
-
-		const fs = top.require('fs');
-		console.log(fs);
+		const server = top.require('electron').remote.require('./server');
+		server.setFileTextListener((text) => {
+			setPreviewText(text);
+		});
+		setPreviewText(server.getFileText());
 	</script>
 </body>
 

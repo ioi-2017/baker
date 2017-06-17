@@ -15,7 +15,6 @@ let mainWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({ width: 800, height: 600 });
-  mainWindow.webContents.openDevTools();
 
   const indexFile = url.format({
     pathname: path.join(__dirname, 'index.html'),
@@ -41,9 +40,9 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function() {
-  const file = server.openMarkdownFile(__dirname + '/index.md');
+  const file = server.openMarkdownFile();
   if (file) {
-    createWindow(file);
+    createWindow();
   } else {
     app.quit();
   }

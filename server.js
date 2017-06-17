@@ -1,3 +1,7 @@
+let filePath = null;
+let fileText = null;
+let fileCallback = null;
+
 function openMarkdownFile(path) {
   const fs = require('fs');
   if (!path) {
@@ -11,17 +15,44 @@ function openMarkdownFile(path) {
     }
   }
   if (path) {
-    return { path, text: fs.readFileSync(path, 'utf-8') };
+    filePath = path;
+    fileText = fs.readFileSync(path, 'utf-8');
+    return true;
   }
-  return null;
+  return false;
 }
 
-function saveMarkdownFile(path, text) {
-  const fs = require('fs');
-  fs.writeFileSync(path, text);
+function saveMarkdownFile() {
+  if (filePath) {
+    const fs = require('fs');
+    fs.writeFileSync(filePath, fileText);
+    return true;
+  }
+  return false;
+}
+
+function setFileText(text) {
+  fileText = text;
+  setTimeout(() => {
+    if (fileCallback) {
+      fileCallback(fileText);
+    }
+  }, 0);
+  setTimeout(saveMarkdownFile, 0);
+}
+
+function getFileText() {
+  return fileText;
+}
+
+function setFileTextListener(callback) {
+  fileCallback = callback;
 }
 
 module.exports = {
   openMarkdownFile,
   saveMarkdownFile,
+  setFileText,
+  setFileTextListener,
+  getFileText,
 };

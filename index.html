@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Markdown Viewer</title>
+	<title>Baker</title>
 	<style>
 		html,
 		body {
@@ -53,6 +53,8 @@
 			});
 			handleResize();
 		});
+
+		const server = require('electron').remote.require('./server');
 	</script>
 	<script>
 		// Monaco uses a custom amd loader that over-rides node's require.
@@ -88,15 +90,28 @@
 		// workaround monaco-typescript not understanding the environment
 		self.process.browser = true;
 
+		function onDidChangeModelContentDebounced(editor, callback) {
+			var timer = -1;
+			var runner = function () {
+				timer = -1;
+				callback();
+			}
+			return editor.onDidChangeModelContent(function (e) {
+				if (timer !== -1) {
+					clearTimeout(timer);
+				}
+				timer = setTimeout(runner, 100);
+			});
+		}
+
 		amdRequire(['vs/editor/editor.main'], function () {
 			var editor = monaco.editor.create(document.getElementById('editor'), {
-				value: [
-					'function x() {',
-					'\tconsole.log("Hello world!");',
-					'}'
-				].join('\n'),
-				language: 'javascript',
+				value: server.getFileText(),
+				language: 'markdown',
 				automaticLayout: true
+			});
+			onDidChangeModelContentDebounced(editor, () => {
+				server.setFileText(editor.getValue());
 			});
 		});
 	</script>
