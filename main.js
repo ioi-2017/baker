@@ -41,7 +41,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function() {
-  const file = server.openMarkdownFile();
+  const file = server.openMarkdownFile(__dirname + '/index.md');
   if (file) {
     createWindow(file);
   } else {
