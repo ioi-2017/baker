@@ -1,0 +1,15 @@
+{
+  "name": "baker",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-packager . --overwrite"
+  },
+  "devDependencies": {
+    "electron": "^1.6.11",
+    "electron-packager": "^8.7.1"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Markdown Viewer</title>
+	<link rel="stylesheet" href="assets/style.css">
+	<script type="text/javascript" src="assets/libs.js"></script>
+</head>
+
+<body>
+	<div style="margin-left:10%; width:80%">
+		<div id="content" class="markdown-body"></div>
+	</div>
+	<script>
+		// Initilize Makrded.js Renderer
+
+		var renderer = new marked.Renderer();
+
+		// enable resize option for images
+		renderer.image = function (href, title, text) {
+			var tags = '';
+			if (title) {
+				size = title.split('x');
+				if (size[1])
+					tags = 'width=' + size[0] + ' height=' + size[1];
+				else
+					tags = 'width=' + size[0];
+			} else if (href && href.indexOf('=') != -1) {
+				size = href.split('=')[1].split('x');
+				href = href.split('=')[0];
+				if (size[1])
+					tags = 'width=' + size[0] + ' height=' + size[1];
+				else
+					tags = 'width=' + size[0];
+			}
+			return ('<img src="' + href + '" alt="' + text + '" ' + tags + '>');
+		};
+
+		// remove trailing newline in code blocks
+		renderer.code = function (code, language) {
+			return ('<pre><code>' + code + '</code></pre>');
+		};
+
+		// global options
+		marked.setOptions({
+			renderer: renderer,
+			gfm: true,
+			tables: true,
+			breaks: false,
+			pedantic: false,
+			sanitize: false,
+			smartLists: true,
+			smartypants: false
+		});
+
+		function readTextFile(file) {
+			var rawFile = new XMLHttpRequest();
+			rawFile.open("GET", file, true);
+			rawFile.onreadystatechange = function () {
+				if (rawFile.readyState === 4) {
+					if (rawFile.status === 200 || rawFile.status == 0) {
+						var allText = rawFile.responseText;
+						document.getElementById('content').innerHTML = marked(allText);
+						renderMathInElement(document.getElementById('content'));
+					}
+				}
+			}
+			rawFile.send(null);
+		}
+
+		readTextFile("index.md")
+
+		const fs = top.require('fs');
+		console.log(fs);
+	</script>
+</body>
+
+</html>
