@@ -108,7 +108,9 @@
 			var editor = monaco.editor.create(document.getElementById('editor'), {
 				value: server.getFileText(),
 				language: 'markdown',
-				automaticLayout: true
+				automaticLayout: true,
+				wrappingColumn: 0,
+				lineNumbers: false,
 			});
 			onDidChangeModelContentDebounced(editor, () => {
 				server.setFileText(editor.getValue());
