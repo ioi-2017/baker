@@ -21,11 +21,9 @@
 
 		#editor {
 			flex: 1;
-			height: 100%;
 		}
 
 		#separator {
-			width: 4px;
 			background-color: lightgray;
 		}
 
@@ -41,9 +39,24 @@
 	<div id="editor"></div>
 	<div id="separator"></div>
 	<script>
+		const $ = require('./assets/jquery.js');
+		const handleResize = () => {
+			const columnWidth = ($(window).innerWidth() - 4) / 2;
+			const columnHeight = $(window).innerHeight();
+			$('#editor').width(columnWidth).height(columnHeight);
+			$('#separator').width(4).height(columnHeight);
+			$('#preview').width(columnWidth).height(columnHeight);
+		}
+		$(document).ready(() => {
+			$(window).resize(() => {
+				handleResize();
+			});
+			handleResize();
+		});
+	</script>
+	<script>
 		// Monaco uses a custom amd loader that over-rides node's require.
 		// Keep a reference to node's require so we can restore it after executing the amd loader file.
-		console.log('salaaam');
 		var nodeRequire = global.require;
 	</script>
 	<script src="assets/vs/loader.js"></script>
@@ -82,7 +95,8 @@
 					'\tconsole.log("Hello world!");',
 					'}'
 				].join('\n'),
-				language: 'javascript'
+				language: 'javascript',
+				automaticLayout: true
 			});
 		});
 	</script>
