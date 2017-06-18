@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . --overwrite"
+    "build": "electron-packager . --overwrite --icon=icons/baker"
   },
   "devDependencies": {
     "electron": "^1.6.11",
